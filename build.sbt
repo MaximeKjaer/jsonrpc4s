@@ -23,7 +23,7 @@ inThisBuild(
 )
 
 lazy val jsonrpc4s = crossProject(JVMPlatform, JSPlatform)
-  .crossType(CrossType.Pure)
+  .crossType(CrossType.Full)
   .in(file("."))
   .settings(
     name := "jsonrpc4s",

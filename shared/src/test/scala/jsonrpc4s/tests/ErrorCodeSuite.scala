@@ -22,7 +22,5 @@ object ErrorCodeSuite extends SimpleTestSuite {
   check(666, ErrorCode.Unknown(666))
   check(-32000, ErrorCode.Unknown(-32000))
   check(-32099, ErrorCode.Unknown(-32099))
-  ErrorCode.builtin.foreach { code =>
-    check(code.value, code)
-  }
+  ErrorCode.builtin.foreach { code => check(code.value, code) }
 }

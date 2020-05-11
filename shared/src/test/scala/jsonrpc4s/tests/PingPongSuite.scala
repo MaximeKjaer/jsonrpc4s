@@ -50,9 +50,7 @@ object PingPongSuite extends SimpleTestSuite {
     val pongs = new ConcurrentLinkedQueue[String]()
     val services = Services
       .empty(Logger.root)
-      .request(Hello) { msg =>
-        s"$msg, World!"
-      }
+      .request(Hello) { msg => s"$msg, World!" }
       .notification(Pong) { message =>
         assert(pongs.add(message))
         if (pongs.size() == 2) {
