@@ -3,7 +3,6 @@ package jsonrpc4s
 import monix.eval.Task
 import monix.execution.Scheduler
 import monix.reactive.Observable
-import scala.collection.concurrent.TrieMap
 import scala.util.control.NonFatal
 import scala.util.{Try, Success, Failure}
 import scribe.LoggerSupport
@@ -25,7 +24,9 @@ class RpcServer protected (
       logger: LoggerSupport
   ) = this(Right(in), client, services, requestScheduler, logger)
 
-  protected val activeClientRequests: TrieMap[RequestId, CancelableFuture[Response]] = TrieMap.empty
+  protected val activeClientRequests =
+    CollectionCompat.threadSafeMutableMapEmpty[RequestId, CancelableFuture[Response]]
+
   protected val cancelNotification = {
     Service.notification[CancelParams]("$/cancelRequest", logger) {
       new Service[CancelParams, Unit] {

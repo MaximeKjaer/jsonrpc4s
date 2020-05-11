@@ -8,7 +8,6 @@ import monix.execution.Cancelable
 import monix.execution.atomic.Atomic
 import monix.execution.atomic.AtomicInt
 import monix.reactive.Observer
-import scala.collection.concurrent.TrieMap
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scribe.LoggerSupport
@@ -25,7 +24,8 @@ class RpcClient(
 ) extends RpcActions {
 
   private val counter: AtomicInt = Atomic(1)
-  private val activeServerRequests = TrieMap.empty[RequestId, Callback[Throwable, Response]]
+  private val activeServerRequests =
+    CollectionCompat.threadSafeMutableMapEmpty[RequestId, Callback[Throwable, Response]]
 
   def serverRespond(response: Response): Future[Ack] = {
     response match {
