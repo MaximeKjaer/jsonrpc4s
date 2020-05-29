@@ -18,26 +18,34 @@ inThisBuild(
         "jorgevc@fastmail.es",
         url("https://jvican.github.io/")
       )
-    ),
+    )
+  )
+)
+
+lazy val jsonrpc4s = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Full)
+  .in(file("."))
+  .settings(
+    name := "jsonrpc4s",
     scalaVersion := "2.13.2",
     scalacOptions ++= List(
       "-Yrangepos",
       "-deprecation",
       "-Xlint"
     ),
-    testFrameworks += new TestFramework("minitest.runner.Framework"),
-    bloopExportJarClassifiers := Some(Set("sources"))
+    bloopExportJarClassifiers := Some(Set("sources")),
+    releaseEarlyWith := SonatypePublisher,
+    publishTo := sonatypePublishToBundle.value,
+    libraryDependencies ++= List(
+      "io.monix" %%% "monix" % "3.2.1",
+      "com.outr" %%% "scribe" % "2.7.12",
+      "com.github.plokhotnyuk.jsoniter-scala" %%% "jsoniter-scala-core" % "2.2.3",
+      "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.2.3" % Provided,
+      "io.monix" %%% "minitest" % "2.8.2" % Test,
+      "com.lihaoyi" %%% "pprint" % "0.5.9" % Test
+    ),
+    testFrameworks += new TestFramework("minitest.runner.Framework")
   )
-)
 
-name := "jsonrpc4s"
-releaseEarlyWith := SonatypePublisher
-publishTo := sonatypePublishToBundle.value
-libraryDependencies ++= List(
-  "io.monix" %% "monix" % "3.1.0",
-  "com.outr" %% "scribe" % "2.7.10",
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.1.15",
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.1.15" % Provided,
-  "io.monix" %% "minitest" % "2.7.0" % Test,
-  "com.lihaoyi" %% "pprint" % "0.5.6" % Test
-)
+lazy val jsonrpc4sJVM = jsonrpc4s.jvm
+lazy val jsonrpc4sJS = jsonrpc4s.js
