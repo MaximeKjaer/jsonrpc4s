@@ -1,9 +1,9 @@
 package jsonrpc4s.tests
 
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
+import java.io.{ByteArrayOutputStream, PrintStream}
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+
 import minitest.SimpleTestSuite
 
 object FileLoggerSuite extends SimpleTestSuite {
