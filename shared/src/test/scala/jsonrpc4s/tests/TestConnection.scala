@@ -1,7 +1,5 @@
 package jsonrpc4s.testkit
 
-import java.io.PipedInputStream
-import java.io.PipedOutputStream
 import monix.execution.Cancelable
 import monix.execution.Scheduler
 import jsonrpc4s.Connection
@@ -42,12 +40,7 @@ object TestConnection {
       clientServices: RpcClient => Services,
       serverServices: RpcClient => Services
   )(implicit s: Scheduler): TestConnection = {
-    val inAlice = new PipedInputStream()
-    val inBob = new PipedInputStream()
-    val outAlice = new PipedOutputStream(inBob)
-    val outBob = new PipedOutputStream(inAlice)
-    val aliceIO = new InputOutput(inAlice, outAlice)
-    val bobIO = new InputOutput(inBob, outBob)
+    val (aliceIO, bobIO) = TestPlatform.aliceAndBobIO()
     val alice = Connection.simple(aliceIO, "alice")(clientServices)
     val bob = Connection.simple(bobIO, "bob")(serverServices)
     new TestConnection(alice, aliceIO, bob, bobIO)

@@ -8,7 +8,6 @@ import monix.execution.Cancelable
 import monix.execution.atomic.Atomic
 import monix.execution.atomic.AtomicInt
 import monix.reactive.Observer
-import scala.collection.concurrent.TrieMap
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scribe.LoggerSupport
@@ -25,7 +24,8 @@ class RpcClient(
 ) extends RpcActions {
 
   protected val counter: AtomicInt = Atomic(1)
-  protected val activeServerRequests = TrieMap.empty[RequestId, Callback[Throwable, Response]]
+  protected val activeServerRequests =
+    Platform.threadSafeMutableMapEmpty[RequestId, Callback[Throwable, Response]]
 
   protected val notificationsLock = new Object()
   protected def toJson[R: JsonValueCodec](r: R): RawJson = RawJson(writeToArray(r))
